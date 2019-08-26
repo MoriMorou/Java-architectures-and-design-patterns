@@ -1,0 +1,68 @@
+@startuml
+
+title EchoChat - Server
+
++class ServerApp {
+.. Main method ..
+  +static void main(String[] args);
+}
+
++class MyServer {
+  -final int PORT
+  -List<ClientHandler> clients
+  -AuthService authService
+
+  +AuthService getAuthService();
+  +MyServer();
+  +synchronized boolean isNickBusy(String nick);
+  +synchronized void broadcastMsg(String msg);
+  +synchronized void unsubscribe(ClientHandler o);
+  +synchronized void subscribe(ClientHandler o);
+}
+
+ServerApp ..> MyServer : use
+
++interface AuthService {
+  +void start();
+  +String getNickByLoginPass(String login, String pass);
+  +void stop();
+}
+
++class BaseAuthService {
+  -List<Entry> entries;
+
+  +void start();
+  +void stop();
+  +BaseAuthService();
+  +String getNickByLoginPass(String login, String pass);
+}
+
+-class Entry{
+  -String login;
+  -String pass;
+  +String nick;
+}
+
+Entry ..> BaseAuthService : create
+AuthService ..> BaseAuthService : create
+
++class ClientHandler{
+   -MyServer myServer;
+   -Socket socket;
+   -DataInputStream in;
+   -DataOutputStream out;
+   -String name;
+
+   +String getName();
+
+   +ClientHandler(MyServer myServer, Socket socket);
+   +void authentication();
+   +void readMessages();
+   +void sendMsg(String msg);
+   +void closeConnection();
+}
+
+MyServer ..> ClientHandler : use
+BaseAuthService ..> ClientHandler : use
+
+@enduml
