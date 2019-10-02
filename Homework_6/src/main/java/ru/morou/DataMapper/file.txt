@@ -1,0 +1,11 @@
+/*
+-- Скрипт для создания таблицы
+CREATE TABLE [order] (
+    id         INTEGER PRIMARY KEY AUTOINCREMENT
+                       NOT NULL
+                       UNIQUE,
+    type       TEXT    NOT NULL,
+    start_date TEXT    NOT NULL,
+    status     TEXT    NOT NULL
+);
+ */
